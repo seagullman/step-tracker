@@ -82,7 +82,7 @@ struct DashboardView: View {
                         }
                         
                         Spacer()
-                    
+                        
                         RoundedRectangle(cornerRadius: 12)
                             .foregroundStyle(.secondary)
                             .frame(height: 240)
@@ -104,7 +104,7 @@ struct DashboardView: View {
             } content: {
                 HealthKitPermissionPrimingView(hasSeen: $hasSeenPermissionPriming)
             }
-
+            
         }
         .tint(isSteps ? .pink : .indigo)
     }
