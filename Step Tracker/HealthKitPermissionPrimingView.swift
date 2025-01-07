@@ -6,8 +6,17 @@
 //
 
 import SwiftUI
+import HealthKitUI
 
 struct HealthKitPermissionPrimingView: View {
+    
+    // NOTE: not using EnvironmentObject... this is the new iOS 17 way
+    @Environment(HealthKitManager.self) private var hkManager
+    @Environment(\.dismiss) private var dismiss
+    
+    @State private var isShowingHealthKitPermissions = false
+    
+    
     var description =  """
     This app display your step and weight data in interactive charts.
 
@@ -31,15 +40,29 @@ struct HealthKitPermissionPrimingView: View {
             }
             
             Button("Connect Apple Health") {
-                // TODO
+                isShowingHealthKitPermissions = true
             }
             .buttonStyle(.borderedProminent)
             .tint(.pink)
         }
         .padding(30)
+        .healthDataAccessRequest(
+            store: hkManager.store,
+            shareTypes: hkManager.types,
+            readTypes: hkManager.types,
+            trigger: isShowingHealthKitPermissions) { result in
+                switch result {
+                case .success(let success):
+                    dismiss()
+                case .failure(let failure):
+                    // TODO: handle error
+                    dismiss()
+                }
+            }
     }
 }
 
 #Preview {
     HealthKitPermissionPrimingView()
+        .environment(HealthKitManager())
 }
